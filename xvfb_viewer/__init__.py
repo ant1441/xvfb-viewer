@@ -17,10 +17,12 @@ app = Flask(__name__)
 app.config['IMAGE_DIR'] = join(split(__file__)[0], 'static')
 app.config['REFRESH'] = 0.5
 app.config['XVFB_FILE'] = "/var/tmp/Xvfb_display2/Xvfb_screen0"
+app.config['DEBUG'] = False
 log.info("Initilisation complete")
 
 from .views import views
 
 
 def run():
-    app.run(debug=True)
+    app.run('0.0.0.0')
+    RestrictNumberFiles(app.config['XVFB_FILE'], 2).run()
