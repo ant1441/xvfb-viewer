@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <script type="text/javascript">
+      var xvfb = false;
+      function checkXvfb() {
+        'use strict';
+        var request = new XMLHttpRequest();
+        request.open('GET', "{{ url_for('xvfb_exists') }}", false);
+        request.send();
+
+        if (request.status === 200) {
+          if (request.responseText == "false") {
+            xvfb = false;
+            return xvfb;
+          }
+          else if (request.responseText == "true") {
+            xvfb = true;
+            return xvfb;
+          }
+        }
+      }
+
+    </script>
+    <title>XVFB Image Viewer</title>
+  </head>
+  <body bgcolor="white">
+    <img id="xvfb_image">
+    <script type="text/javascript">
+      var image = document.getElementById('xvfb_image');
+      var count = 0;
+      var ratio = 100;
+      var maxWait = ({{ max }} / 10) * ratio;
+      var interval;
+
+      function updateImage() {
+        'use strict';
+        if ((count % 5 && xvfb) || checkXvfb()) {
+          image.src = '{{ url_for('xvfb_image') }}?rand=' + Math.random();
+          image.style.visibility='visible';
+          count++;
+        } else {
+          clearInterval(interval);
+          image.style.visibility='hidden';
+          waitXvfb();
+        }
+      }
+
+      function startUpdate() {
+        'use strict';
+        count = 0;
+        interval = setInterval(updateImage, {{ interval }});
+      }
+
+      var waitXvfb;
+      (waitXvfb = function() {
+        'use strict';
+        if (xvfb || checkXvfb() ) { startUpdate(); return; }
+        count = count * 2;
+        if (!count) { count++; }
+        if (count > maxWait) {
+          count = maxWait;
+        }
+
+        setTimeout(waitXvfb, count * ratio);
+      })();
+    </script>
+  </body>
+</html>
