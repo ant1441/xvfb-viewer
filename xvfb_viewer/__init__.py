@@ -24,5 +24,5 @@ from .views import views
 
 
 def run():
-    app.run('0.0.0.0')
-    RestrictNumberFiles(app.config['XVFB_FILE'], 2).run()
+    app.run('0.0.0.0', debug=True)
+    #RestrictNumberFiles(app.config['XVFB_FILE'], 2).run()
