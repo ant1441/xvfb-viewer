@@ -9,7 +9,7 @@ ch.setLevel(logging.DEBUG)
 
 log.addHandler(ch)
 
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
 log.info("Initialising application")
 app = Flask(__name__)
